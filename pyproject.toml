@@ -1,0 +1,25 @@
+[tool.poetry]
+    name = "qsipy"
+    version = "0.1.0"
+    description = "Quantum State Interferometry with PYthon."
+    authors = ["Quentin Marolleau <quentin.marolleau@institutoptique.fr>"]
+    license = "mit"
+    readme = "README.md"
+    packages = [{ include = "qsipy", from = "src" }]
+
+    [tool.poetry.dependencies]
+        python = "^3.10"
+        numpy = "^1.25.0"
+
+    [tool.poetry.group.dev.dependencies]
+        flake8 = "^6.0.0"
+        mypy = "^1.4.1"
+        pytest = "^7.4"
+        black = "^23.3.0"
+
+[build-system]
+    requires = ["poetry-core"]
+    build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+    pythonpath = ["src"]
