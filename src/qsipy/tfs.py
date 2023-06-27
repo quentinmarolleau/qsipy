@@ -5,27 +5,42 @@ The interferometer considered is a generic Mach-Zehnder with a phase difference 
 between both arms.
 The detectors may have a finite quantum efficiency η.
 
-In order to minimise sub-functions calls, we kept most of the functions in an expanded,
+In order to minimise functions calls, we keep most of the functions in an expanded
 analytical form.
+
+abbreviations:
+--------------
+    - ev: Expectation Value
+    - vhd: Variance of the Half Difference of the number of particles at the output
+        (i.e. our observable)
+
+general notations:
+------------------
+    - N: the total number of particles in the interferometer. It corresponds to the
+        main experimental resource.
+    - phi: the phase difference between both arms of the interferometer
+    - eta: quantum efficiency of the detectors (between 0 and 1). More generally it may
+        characterize any loss process occurring after the last beam splitter of the
+        interferometer.
 """
 
 import numpy as np
 import numpy.typing as npt
 from .trigonometry import arccsc, arcsec
 
-# - OBSERVABLE: Var. of the difference of numbers of particles between both arms
-# -------------------------------------------------------------------------------
+# - OBSERVABLE: Variance of the difference of numbers of particles between both arms
+# ----------------------------------------------------------------------------------
 
 # |- DETECTORS: perfects
-# -----------------------
+# ----------------------
 
 
-def ev_variance_difference_perfect_qe(
+def ev_vhd_perfect_qe(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the variance of the difference of number of
-    particles detected at both output arms of the interferometer.
+    """Returns the expectation value of the variance of the half difference of number of
+    particles detected at both output ports of the interferometer.
     The detectors are perfect, meaning that their quantum efficiency is equal to 1.
     Since the expectation value of the difference itself is zero, the variance is
     actually equal to the expectation value of the square of the difference.
@@ -40,17 +55,17 @@ def ev_variance_difference_perfect_qe(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <(N_output1 - N_output2) ** 2>
+        Expectation value: <(1/4) * (N_output1 - N_output2) ** 2>
     """
     return 0.25 * N * (1 + N / 2) * np.sin(phi) ** 2
 
 
-def ev_difference_quarted_perfect_qe(
+def ev_vhd_squared_perfect_qe(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the power four of the difference of number of
-    particles detected at both output arms of the interferometer.
+    """Returns the expectation value of the power four of the half difference of number
+    of particles detected at both output ports of the interferometer.
     The detectors are perfect, meaning that their quantum efficiency is equal to 1.
 
     Parameters
@@ -63,7 +78,7 @@ def ev_difference_quarted_perfect_qe(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <(N_output1 - N_output2) ** 4>
+        Expectation value: <(1/16) * (N_output1 - N_output2) ** 4>
     """
     return (
         0.25
@@ -74,20 +89,13 @@ def ev_difference_quarted_perfect_qe(
     )
 
 
-def ev_fourth_moment_difference_perfect_qe(
+def fluctuations_diff_perfect_qe(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the variance of the variance (4th moment) of
-    the difference of number of particles detected at both output arms of the
-    interferometer.
+    """Returns the quantum fluctuations of the variance of the half difference of number
+    of particles detected at both output ports of the interferometer.
     The detectors are perfect, meaning that their quantum efficiency is equal to 1.
-    This function is equal to:
-
-    (ev_difference_quarted_perfect_qe - ev_difference_squared_perfect_qe ** 2)
-
-    It corresponds to the square of the noise on the variance of the difference of
-    number of particles detected.
 
     Parameters
     ----------
@@ -99,51 +107,21 @@ def ev_fourth_moment_difference_perfect_qe(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <Var(Var(N_output1 - N_output2))>
+        Expectation value: <Sqrt[Var( Var{ (1/2) * (N_output1 - N_output2) } )]>
     """
-    return (
-        (1 / 16)
-        * N
-        * (1 + N / 2)
-        * np.sin(phi) ** 2
-        * (4 + (-6 + N / 2 + N**2 / 4) * np.sin(phi) ** 2)
-    )
+    return np.sqrt(ev_vhd_squared_perfect_qe(phi, N) - ev_vhd_perfect_qe(phi, N) ** 2)
 
 
-def noise_difference_perfect_qe(
+def phase_uncertainty_vhd_perfect_qe(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the noise on the variance of the difference of number of particles
-    detected at both output arms of the interferometer.
-    The detectors are perfect, meaning that their quantum efficiency is equal to 1.
-    This function is equal to:
+    """Returns the phase uncertainty during an interferometry experiment using
+        - twin-Fock states at the input
+        - perfect detectors (quantum efficiency equal to 1)
+        - considering the variance of the half difference of particles detected at the
+            output as the observable of interest.
 
-    sqrt(ev_fourth_moment_difference_perfect_qe)
-
-    Parameters
-    ----------
-    phi : float | npt.NDArray[np.float_]
-        Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
-        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
-
-    Returns
-    -------
-    float | npt.NDArray[np.float_]
-        RMS noise on the variance of the difference of number of particles detected.
-    """
-    return np.sqrt(ev_fourth_moment_difference_perfect_qe(phi, N))
-
-
-def phase_resolution_difference_perfect_qe(
-    phi: float | npt.NDArray[np.float_],
-    N: int | npt.NDArray[np.int_],
-) -> float | npt.NDArray[np.float_]:
-    """Returns the resolution of the phase estimation during an interferometry
-    experiment using twin-Fock states, perfect detectors and considering the variance
-    of the difference of particles at the output as the observable of interest.
-    The detectors are perfect, meaning that their quantum efficiency is equal to 1.
     Notice that this resolution depends on the phase difference phi.
 
     Parameters
@@ -156,7 +134,7 @@ def phase_resolution_difference_perfect_qe(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Phase resolution.
+        Phase uncertainty.
     """
     return (
         (np.sqrt(2) / 2)
