@@ -101,3 +101,51 @@ def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
     )
     check = check.all()
     assert check
+
+
+def test_fluctuations_diff_perfect_qe(RELATIVE_DIFF=1e-14):
+    # check value at zero
+    assert tfs.fluctuations_diff_perfect_qe(0, 2) == 0
+    assert tfs.fluctuations_diff_perfect_qe(0, 10) == 0
+    assert tfs.fluctuations_diff_perfect_qe(0, 100) == 0
+
+    # check nonzero values
+    phi_inputs = np.array([0.01, 0.05, 0.1, 0.5, 1.0])
+    tabulated_N_equal_2 = np.array(
+        [
+            0.00999933334666654,
+            0.0499167083234141,
+            0.0993346653975306,
+            0.420735492403948,
+            0.454648713412841,
+        ]
+    )
+    tabulated_N_equal_100 = np.array(
+        [
+            0.368244768425682,
+            2.87132880258715,
+            9.65704797089816,
+            207.685588441428,
+            638.327562436834,
+        ]
+    )
+
+    check = (
+        relative_deviation(
+            array_tested=tfs.fluctuations_diff_perfect_qe(phi_inputs, 2),
+            array_tabulated=tabulated_N_equal_2,
+        )
+        < RELATIVE_DIFF
+    )
+    check = check.all()
+    assert check
+
+    check = (
+        relative_deviation(
+            array_tested=tfs.fluctuations_diff_perfect_qe(phi_inputs, 100),
+            array_tabulated=tabulated_N_equal_100,
+        )
+        < RELATIVE_DIFF
+    )
+    check = check.all()
+    assert check
