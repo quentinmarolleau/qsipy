@@ -102,7 +102,7 @@ def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
     assert check
 
 
-def test_fluctuations_diff_perfect_qe(RELATIVE_DIFF=1e-14):
+def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
     # check value at zero
     assert tfs.fluctuations_diff_perfect_qe(0, 2) == 0
     assert tfs.fluctuations_diff_perfect_qe(0, 10) == 0
