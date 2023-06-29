@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from qsipy import tfs
 
 
@@ -143,6 +142,40 @@ def test_fluctuations_diff_perfect_qe(RELATIVE_DIFF=1e-14):
     check = (
         relative_deviation(
             array_tested=tfs.fluctuations_diff_perfect_qe(phi_inputs, 100),
+            array_tabulated=tabulated_N_equal_100,
+        )
+        < RELATIVE_DIFF
+    )
+    check = check.all()
+    assert check
+
+
+def test_phase_uncertainty_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
+    # check N=2 => phase uncertainty = 1/2
+    delta_phi = tfs.phase_uncertainty_vhd_perfect_qe(0, 2)
+    assert relative_deviation(delta_phi, 0.5) < RELATIVE_DIFF
+
+    delta_phi = tfs.phase_uncertainty_vhd_perfect_qe(0.1, 2)
+    assert relative_deviation(delta_phi, 0.5) < RELATIVE_DIFF
+
+    delta_phi = tfs.phase_uncertainty_vhd_perfect_qe(1, 2)
+    assert relative_deviation(delta_phi, 0.5) < RELATIVE_DIFF
+
+    phi_inputs = np.array([0, 0.01, 0.05, 0.1, 0.5, 1.0])
+    tabulated_N_equal_100 = np.array(
+        [
+            0.0140028008402801,
+            0.0144419340871611,
+            0.02255780344803,
+            0.0381244313904991,
+            0.19357846027015,
+            0.550588898426396,
+        ]
+    )
+
+    check = (
+        relative_deviation(
+            array_tested=tfs.phase_uncertainty_vhd_perfect_qe(phi_inputs, 100),
             array_tabulated=tabulated_N_equal_100,
         )
         < RELATIVE_DIFF
