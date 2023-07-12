@@ -104,9 +104,9 @@ def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
 
 def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
     # check value at zero
-    assert tfs.fluctuations_diff_perfect_qe(0, 2) == 0
-    assert tfs.fluctuations_diff_perfect_qe(0, 10) == 0
-    assert tfs.fluctuations_diff_perfect_qe(0, 100) == 0
+    assert tfs.fluctuations_vhd_perfect_qe(0, 2) == 0
+    assert tfs.fluctuations_vhd_perfect_qe(0, 10) == 0
+    assert tfs.fluctuations_vhd_perfect_qe(0, 100) == 0
 
     # check nonzero values
     phi_inputs = np.array([0.01, 0.05, 0.1, 0.5, 1.0])
@@ -131,7 +131,7 @@ def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
 
     check = (
         relative_deviation(
-            array_tested=tfs.fluctuations_diff_perfect_qe(phi_inputs, 2),
+            array_tested=tfs.fluctuations_vhd_perfect_qe(phi_inputs, 2),
             array_tabulated=tabulated_N_equal_2,
         )
         < RELATIVE_DIFF
@@ -141,7 +141,7 @@ def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
 
     check = (
         relative_deviation(
-            array_tested=tfs.fluctuations_diff_perfect_qe(phi_inputs, 100),
+            array_tested=tfs.fluctuations_vhd_perfect_qe(phi_inputs, 100),
             array_tabulated=tabulated_N_equal_100,
         )
         < RELATIVE_DIFF
