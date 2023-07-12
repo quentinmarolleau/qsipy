@@ -185,18 +185,14 @@ def test_phase_uncertainty_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
 
 
 def test_ev_vhd_finite_qe(RELATIVE_DIFF=1e-14):
-    # check the divergence at phi=0, whatever N and eta
-    # assert tfs.ev_vhd_finite_qe(phi=0, N=2, eta=0.5) == np.inf
-    # assert tfs.ev_vhd_finite_qe(phi=0, N=10, eta=0.75) == np.inf
-    # assert tfs.ev_vhd_finite_qe(phi=0, N=100, eta=0.95) == np.inf
-
     # check various values
-    phi_inputs = np.array([0.01, 0.05, 0.1, 0.5, 1.0])
+    phi_inputs = np.array([0, 0.01, 0.05, 0.1, 0.5, 1.0])
     N_inputs = np.array([2, 100])
     eta_inputs = np.array([0.5, 0.75, 0.9, 0.95])
     phi, N, eta = np.meshgrid(phi_inputs, N_inputs, eta_inputs, indexing="ij")
     tabulated = np.array(
         [
+            [[0.125, 0.09375, 0.045, 0.02375], [6.25, 4.6875, 2.25, 1.1875]],
             [
                 [
                     0.125024999166678,
