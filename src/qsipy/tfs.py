@@ -455,67 +455,6 @@ def phase_uncertainty_vhd(
 # ||- behaviour at the optimal phase
 
 
-def derivative_phase_resolution_difference_finite_qe(
-    phi: float | npt.NDArray[np.float_],
-    N: int | npt.NDArray[np.int_],
-    eta: float | npt.NDArray[np.float_],
-) -> float | npt.NDArray[np.float_]:
-    """Returns the derivative (with respect to phi) of the resolution of the phase
-    estimation during an interferometry experiment using twin-Fock states, detectors
-    with finite quantum efficiency and considering the variance of the difference of
-    particles at the output as the observable of interest. The detectors have a finite
-    quantum efficiency eta.
-
-    Parameters
-    ----------
-    phi : float | npt.NDArray[np.float_]
-        Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
-        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
-
-    Returns
-    -------
-    float | npt.NDArray[np.float_]
-        Derivative of the phase resolution.
-    """
-    n = N / 2
-    return (
-        -((1 + n) * eta * (4 + 6 * (-2 + eta) * eta + n * eta * (8 + (-7 + n) * eta)))
-        - (-1 + eta)
-        * (-1 + 2 * (-3 + 2 * n) * (-1 + eta) * eta)
-        * (1 / np.sin(phi) ** 2)
-        + (
-            1
-            + eta
-            * (-3 + n * (8 + 3 * (-4 + eta) * eta + n * eta * (8 + (-6 + n) * eta)))
-        )
-        * (1 / np.cos(phi) ** 2)
-    ) / (
-        (1 + n)
-        * eta
-        * np.sqrt(
-            n
-            * eta
-            * (
-                8
-                + 8 * (-5 + 6 * n) * eta
-                + 16 * (-1 + n) * (-3 + 2 * n) * eta**2
-                + (-18 + n * (33 + n * (-26 + 3 * n))) * eta**3
-                + (1 + n)
-                * eta
-                * (
-                    -4
-                    * (4 + 6 * (-2 + eta) * eta + n * eta * (8 + (-7 + n) * eta))
-                    * np.cos(2 * phi)
-                    + (-6 + n + n**2) * eta**2 * np.cos(4 * phi)
-                )
-            )
-        )
-    )
-
-
 def optimal_phi_difference(
     N: int | npt.NDArray[np.int_],
     eta: float | npt.NDArray[np.float_],
