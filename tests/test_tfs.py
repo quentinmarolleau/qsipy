@@ -40,8 +40,7 @@ def test_ev_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
     check = (
         relative_deviation(
@@ -50,8 +49,7 @@ def test_ev_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
@@ -88,8 +86,7 @@ def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
     check = (
         relative_deviation(
@@ -98,8 +95,7 @@ def test_ev_vhd_squared_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
@@ -136,8 +132,7 @@ def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
     check = (
         relative_deviation(
@@ -146,8 +141,7 @@ def test_fluctuations_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_phase_uncertainty_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
@@ -180,8 +174,7 @@ def test_phase_uncertainty_vhd_perfect_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_ev_vhd_finite_qe(RELATIVE_DIFF=1e-14):
@@ -263,8 +256,7 @@ def test_ev_vhd_finite_qe(RELATIVE_DIFF=1e-14):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_ev_vhd_squared_finite_qe(RELATIVE_DIFF=1e-11):
@@ -369,8 +361,7 @@ def test_ev_vhd_squared_finite_qe(RELATIVE_DIFF=1e-11):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
 
 
 def test_fluctuations_vhd_finite_qe(RELATIVE_DIFF=1e-11):
