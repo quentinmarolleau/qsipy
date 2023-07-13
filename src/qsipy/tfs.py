@@ -455,9 +455,9 @@ def phase_uncertainty_vhd(
 # ||- behaviour at the optimal phase
 
 
-def optimal_phi_difference(
+def optimal_phi_vhd(
     N: int | npt.NDArray[np.int_],
-    eta: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
     """Returns the optimal phase to estimate (minimizing the resolution) during an
     interferometry experiment using twin-Fock states, detectors with finite quantum
@@ -469,8 +469,8 @@ def optimal_phi_difference(
     ----------
     N : int | npt.NDArray[np.int_]
         Total number of particles. The input state being the twin-Fock |N/2,N/2>.
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
 
     Returns
     -------
@@ -478,33 +478,43 @@ def optimal_phi_difference(
         Optimal phase to estimate experimentally.
     """
     n = N / 2
-    return arccsc(
-        np.sqrt(
-            (
-                1
-                + (-7 + 4 * n) * eta
-                + (12 - 8 * n) * eta**2
-                + (-6 + 4 * n) * eta**3
-                + np.sqrt(
-                    (-1 + eta)
-                    * (
-                        -1
-                        + (9 - 12 * n) * eta
-                        - 4 * (6 - 19 * n + 10 * n**2) * eta**2
-                        + (18 - 135 * n + 134 * n**2 - 33 * n**3) * eta**3
-                        + 2 * n * (45 - 72 * n + 31 * n**2 - 2 * n**3) * eta**4
-                        + 2 * n * (-9 + 24 * n - 15 * n**2 + 2 * n**3) * eta**5
+    return np.where(
+        eta == 1,
+        0,
+        arccsc(
+            np.sqrt(
+                (
+                    1
+                    + (-7 + 4 * n) * eta
+                    + (12 - 8 * n) * eta**2
+                    + (-6 + 4 * n) * eta**3
+                    + np.sqrt(
+                        (-1 + eta)
+                        * (
+                            -1
+                            + (9 - 12 * n) * eta
+                            - 4 * (6 - 19 * n + 10 * n**2) * eta**2
+                            + (18 - 135 * n + 134 * n**2 - 33 * n**3) * eta**3
+                            + 2
+                            * n
+                            * (45 - 72 * n + 31 * n**2 - 2 * n**3)
+                            * eta**4
+                            + 2
+                            * n
+                            * (-9 + 24 * n - 15 * n**2 + 2 * n**3)
+                            * eta**5
+                        )
                     )
                 )
+                / ((-1 + eta) * (-1 + (6 - 4 * n) * eta + (-6 + 4 * n) * eta**2))
             )
-            / ((-1 + eta) * (-1 + (6 - 4 * n) * eta + (-6 + 4 * n) * eta**2))
-        )
+        ),
     )
 
 
-def resolution_at_optimal_phi_difference(
+def resolution_at_optimal_phi_vhd(
     N: int | npt.NDArray[np.int_],
-    eta: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
     """Returns the resolution at the optimal phase to estimate during an interferometry
     experiment using twin-Fock states, detectors with finite quantum efficiency eta and
@@ -518,8 +528,8 @@ def resolution_at_optimal_phi_difference(
     ----------
     N : int | npt.NDArray[np.int_]
         Total number of particles. The input state being the twin-Fock |N/2,N/2>.
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
 
     Returns
     -------
@@ -527,7 +537,8 @@ def resolution_at_optimal_phi_difference(
         Optimal resolution.
     """
     n = N / 2
-    return (
+    return np.where(eta == 1, np.sqrt(2) / 2) * (
+        1 / np.sqrt((N / 2) * (1 + N / 2)),
         1
         / (4 * n * (n + 1) * eta**2)
         * np.sqrt(
@@ -650,7 +661,7 @@ def resolution_at_optimal_phi_difference(
                     / ((-1 + eta) * (-1 + 2 * (-3 + 2 * n) * (-1 + eta) * eta))
                 )
             )
-        )
+        ),
     )
 
 
