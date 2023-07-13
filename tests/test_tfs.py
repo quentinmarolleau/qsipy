@@ -564,3 +564,42 @@ def test_phase_uncertainty_vhd_finite_qe(RELATIVE_DIFF=1e-11):
         < RELATIVE_DIFF
     )
     assert check.all()
+
+
+def test_optimal_phi_difference(RELATIVE_DIFF=1e-14):
+    # check various values
+    N_inputs = np.array([2, 50, 100])
+    eta_inputs = np.array([0.5, 0.75, 0.9, 0.95])
+
+    N, eta = np.meshgrid(N_inputs, eta_inputs, indexing="ij")
+    tabulated = np.array(
+        [
+            [
+                0.523598775598299,
+                0.506068904985568,
+                0.514643037152054,
+                0.518929528582268,
+            ],
+            [
+                0.252417483653861,
+                0.154889468715136,
+                0.0926411347623607,
+                0.0655945997013353,
+            ],
+            [
+                0.188182696924450,
+                0.112341469336886,
+                0.0660599460726298,
+                0.0461448377619527,
+            ],
+        ]
+    )
+
+    check = (
+        relative_deviation(
+            array_tested=tfs.optimal_phi_difference(N, eta),
+            array_tabulated=tabulated,
+        )
+        < RELATIVE_DIFF
+    )
+    assert check.all()
