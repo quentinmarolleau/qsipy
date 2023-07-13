@@ -477,13 +477,3 @@ def test_fluctuations_vhd_finite_qe(RELATIVE_DIFF=1e-11):
     )
     check = check.all()
     assert check
-
-
-if __name__ == "__main__":
-    print("PHI = 0:")
-    val0 = tfs.phase_uncertainty_vhd(0, 10)
-    val1 = tfs.phase_uncertainty_vhd(0, 10, eta=0.7)
-    val2 = tfs.phase_uncertainty_vhd(0, 10, eta=1)
-    print(f"    Perfect: {val0:.3f}")
-    print(f"    eta=0.7: {val1:.3f}")
-    print(f"    eta=1.0: {val2:.3f}")
