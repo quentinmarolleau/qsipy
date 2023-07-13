@@ -260,7 +260,8 @@ def phase_uncertainty_vhd_finite_qe(
         - considering the variance of the half difference of particles detected at the
             output as the observable of interest;
 
-    Notice that this resolution depends on the phase difference phi.
+    Notice that this resolution depends on the phase difference phi. Here (eta < 1),
+    meaning that when (phi = 0), the phase uncertainty goes to infinity.
 
     Parameters
     ----------
@@ -304,11 +305,16 @@ def phase_uncertainty_vhd_finite_qe(
             )
         ),
         8 * N * (N + 2) * eta**2 * np.abs(np.sin(phi) * np.cos(phi)),
-        out=np.full_like(phi + N + eta, np.inf),
+        # we initialize the output with np.inf, and replace with the proper values where
+        # phi!=0. There may be a cleaner way than doing "phi + N + eta" to initialize
+        # an array with the correct shape, but the issue is that phi, N, eta can either
+        # be scalars, or same shape arrays....
+        out=np.full_like(phi + N + eta, np.inf, dtype=np.float64), 
         where=(phi != 0),
     )
 
 
+# agnostic function
 def phase_uncertainty_vhd(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
@@ -316,11 +322,12 @@ def phase_uncertainty_vhd(
 ) -> float | npt.NDArray[np.float_]:
     """Returns the phase uncertainty during an interferometry experiment using
         - twin-Fock states at the input;
-        - detectors with finite quantum efficiency eta;
         - considering the variance of the half difference of particles detected at the
             output as the observable of interest;
 
-    Notice that this resolution depends on the phase difference phi.
+    This function only calls either "phase_uncertainty_vhd_perfect_qe" or
+    "phase_uncertainty_vhd_finite_qe", depending on the value of eta that it is set as
+    argument.
 
     Parameters
     ----------
@@ -328,8 +335,8 @@ def phase_uncertainty_vhd(
         Phase difference between both arms of the interferometer.
     N : int | npt.NDArray[np.int_]
         Total number of particles. The input state being the twin-Fock |N/2,N/2>.
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
 
     Returns
     -------
