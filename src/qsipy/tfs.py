@@ -309,12 +309,114 @@ def phase_uncertainty_vhd_finite_qe(
         # phi!=0. There may be a cleaner way than doing "phi + N + eta" to initialize
         # an array with the correct shape, but the issue is that phi, N, eta can either
         # be scalars, or same shape arrays....
-        out=np.full_like(phi + N + eta, np.inf, dtype=np.float64), 
+        out=np.full_like(phi + N + eta, np.inf, dtype=np.float64),
         where=(phi != 0),
     )
 
 
-# agnostic function
+# ||- agnostic functions
+
+
+def ev_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: int | npt.NDArray[np.int_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the expectation value of the variance of the half difference of number of
+    particles detected at both output ports of the interferometer.
+    Since the expectation value of the difference itself is zero, the variance is
+    actually equal to the expectation value of the square of the difference.
+
+    This function only calls either "ev_vhd_perfect_qe" or "ev_vhd_finite_qe", depending
+    on the value of eta that it is set as argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : int | npt.NDArray[np.int_]
+        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <(1/4) * (N_output1 - N_output2) ** 2>
+    """
+    return np.where(
+        eta == 1,
+        ev_vhd_perfect_qe(phi, N),
+        ev_vhd_finite_qe(phi, N, eta),
+    )
+
+
+def ev_vhd_squared(
+    phi: float | npt.NDArray[np.float_],
+    N: int | npt.NDArray[np.int_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the expectation value of the power four of the half difference of number
+    of particles detected at both output ports of the interferometer.
+
+    This function only calls either "ev_vhd_squared_perfect_qe" or
+    "ev_vhd_squared_finite_qe", depending on the value of eta that it is set as
+    argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : int | npt.NDArray[np.int_]
+        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <(1/16) * (N_output1 - N_output2) ** 4>
+    """
+    return np.where(
+        eta == 1,
+        ev_vhd_squared_perfect_qe(phi, N),
+        ev_vhd_squared_finite_qe(phi, N, eta),
+    )
+
+
+def fluctuations_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: int | npt.NDArray[np.int_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the quantum fluctuations of the variance of the half difference of number
+    of particles detected at both output ports of the interferometer.
+
+    This function only calls either "fluctuations_vhd_perfect_qe" or
+    "fluctuations_vhd_finite_qe", depending on the value of eta that it is set as
+    argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : int | npt.NDArray[np.int_]
+        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <Sqrt[Var( Var{ (1/2) * (N_output1 - N_output2) } )]>
+    """
+    return np.where(
+        eta == 1,
+        fluctuations_vhd_perfect_qe(phi, N),
+        fluctuations_vhd_finite_qe(phi, N, eta),
+    )
+
+
 def phase_uncertainty_vhd(
     phi: float | npt.NDArray[np.float_],
     N: int | npt.NDArray[np.int_],
