@@ -475,5 +475,101 @@ def test_fluctuations_vhd_finite_qe(RELATIVE_DIFF=1e-11):
         )
         < RELATIVE_DIFF
     )
-    check = check.all()
-    assert check
+    assert check.all()
+
+
+def test_phase_uncertainty_vhd_finite_qe(RELATIVE_DIFF=1e-11):
+    # check various values
+    phi_inputs = np.array([0.01, 0.05, 0.1, 0.5, 1.0])
+    N_inputs = np.array([2, 100])
+    eta_inputs = np.array([0.5, 0.75, 0.9, 0.95])
+
+    # check divergence in (phi = 0)
+    N, eta = np.meshgrid(N_inputs, eta_inputs, indexing="ij")
+    check = tfs.phase_uncertainty_vhd_finite_qe(0, N, eta) == np.inf
+    assert check.all()
+
+    phi, N, eta = np.meshgrid(phi_inputs, N_inputs, eta_inputs, indexing="ij")
+    tabulated = np.array(
+        [
+            [
+                [
+                    25.0166622474653,
+                    10.7757735823056,
+                    5.95285192802972,
+                    4.09377332447440,
+                ],
+                [
+                    1.38678993694903,
+                    0.468626787013471,
+                    0.163433092292665,
+                    0.0834114135209242,
+                ],
+            ],
+            [
+                [
+                    5.08278981969643,
+                    2.23751692600539,
+                    1.30064342774047,
+                    0.962187986613910,
+                ],
+                [
+                    0.310716306930982,
+                    0.124744425442541,
+                    0.0604182037385300,
+                    0.0419931756336350,
+                ],
+            ],
+            [
+                [
+                    2.66252470032541,
+                    1.23902922606887,
+                    0.798378572106216,
+                    0.656609397021293,
+                ],
+                [
+                    0.201359484131754,
+                    0.100839622957817,
+                    0.0622989188591163,
+                    0.0504381369638582,
+                ],
+            ],
+            [
+                [
+                    1.11905939836280,
+                    0.677978828756237,
+                    0.556716003136933,
+                    0.526593861646706,
+                ],
+                [
+                    0.252996932961697,
+                    0.214529439168280,
+                    0.200723898933259,
+                    0.196985142180394,
+                ],
+            ],
+            [
+                [
+                    1.50503223210440,
+                    0.828617087744820,
+                    0.610517152937157,
+                    0.552651618190229,
+                ],
+                [
+                    0.609291276555532,
+                    0.570518075559945,
+                    0.557276032123767,
+                    0.553762152696507,
+                ],
+            ],
+        ]
+    )
+
+    check = (
+        relative_deviation(
+            array_tested=tfs.phase_uncertainty_vhd_finite_qe(phi, N, eta),
+            array_tabulated=tabulated,
+        )
+        < RELATIVE_DIFF
+    )
+    assert check.all()
