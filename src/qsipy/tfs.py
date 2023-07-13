@@ -269,6 +269,66 @@ def phase_uncertainty_vhd_finite_qe(
     N : int | npt.NDArray[np.int_]
         Total number of particles. The input state being the twin-Fock |N/2,N/2>.
     eta : float | npt.NDArray[np.float_]
+        Quantum efficiency of the detector, must be strictly between 0 and 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Phase uncertainty.
+    """
+    return np.divide(
+        np.sqrt(
+            N
+            * eta
+            * (
+                (
+                    64
+                    - 320 * eta
+                    + 192 * N * eta
+                    + 384 * eta**2
+                    - 320 * N * eta**2
+                    + 64 * N**2 * eta**2
+                    - 144 * eta**3
+                    + 132 * N * eta**3
+                    - 52 * N**2 * eta**3
+                    + 3 * N**3 * eta**3
+                )
+                + (
+                    -4
+                    * (N + 2)
+                    * eta
+                    * (16 + 16 * (-3 + N) * eta + (24 - 14 * N + N**2) * eta**2)
+                )
+                * np.cos(2 * phi)
+                + (-48 - 20 * N + 4 * N**2 + N**3) * eta**3 * np.cos(4 * phi)
+            )
+        ),
+        8 * N * (N + 2) * eta**2 * np.abs(np.sin(phi) * np.cos(phi)),
+        out=np.full_like(phi + N + eta, np.inf),
+        where=(phi != 0),
+    )
+
+
+def phase_uncertainty_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: int | npt.NDArray[np.int_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the phase uncertainty during an interferometry experiment using
+        - twin-Fock states at the input;
+        - detectors with finite quantum efficiency eta;
+        - considering the variance of the half difference of particles detected at the
+            output as the observable of interest;
+
+    Notice that this resolution depends on the phase difference phi.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : int | npt.NDArray[np.int_]
+        Total number of particles. The input state being the twin-Fock |N/2,N/2>.
+    eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
 
     Returns
@@ -276,30 +336,10 @@ def phase_uncertainty_vhd_finite_qe(
     float | npt.NDArray[np.float_]
         Phase uncertainty.
     """
-    p0 = (
-        64
-        - 320 * eta
-        + 192 * N * eta
-        + 384 * eta**2
-        - 320 * N * eta**2
-        + 64 * N**2 * eta**2
-        - 144 * eta**3
-        + 132 * N * eta**3
-        - 52 * N**2 * eta**3
-        + 3 * N**3 * eta**3
-    )
-
-    p1 = (
-        -4
-        * (N + 2)
-        * eta
-        * (16 + 16 * (-3 + N) * eta + (24 - 14 * N + N**2) * eta**2)
-    )
-
-    p2 = (-48 - 20 * N + 4 * N**2 + N**3) * eta**3
-
-    return np.sqrt(N * eta * (p0 + p1 * np.cos(2 * phi) + p2 * np.cos(4 * phi))) / (
-        8 * N * (N + 2) * eta**2 * np.sin(phi) * np.cos(phi)
+    return np.where(
+        eta == 1,
+        phase_uncertainty_vhd_perfect_qe(phi, N),
+        phase_uncertainty_vhd_finite_qe(phi, N, eta),
     )
 
 
