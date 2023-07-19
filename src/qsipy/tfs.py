@@ -537,8 +537,9 @@ def resolution_at_optimal_phi_vhd(
         Optimal resolution.
     """
     n = N / 2
-    return np.where(eta == 1, np.sqrt(2) / 2) * (
-        1 / np.sqrt((N / 2) * (1 + N / 2)),
+    return np.where(
+        eta == 1,
+        (np.sqrt(2) / 2) * (1 / np.sqrt((N / 2) * (1 + N / 2))),
         1
         / (4 * n * (n + 1) * eta**2)
         * np.sqrt(
