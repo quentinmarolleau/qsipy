@@ -605,26 +605,51 @@ def test_optimal_phi_vhd(RELATIVE_DIFF=1e-14):
     assert check.all()
 
 
-def test_optimal_phi_vhd(RELATIVE_DIFF=1e-14):
-    # check various values
+def test_resolution_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
+    # perfect case
+    N_inputs = np.array([2, 10, 20, 50, 100])
+    tabulated = np.array(
+        [
+            0.5000000000000000000,
+            0.1290994448735805628,
+            0.06741998624632420862,
+            0.02773500981126145610,
+            0.01400280084028009804,
+        ]
+    )
+    check = (
+        relative_deviation(
+            array_tested=tfs.resolution_at_optimal_phi_vhd(N_inputs),
+            array_tabulated=tabulated,
+        )
+        < RELATIVE_DIFF
+    )
+    assert check.all()
+
+    # check various values with eta != 1
     N_inputs = np.array([2, 50, 100])
     eta_inputs = np.array([0.5, 0.75, 0.9, 0.95])
 
     N, eta = np.meshgrid(N_inputs, eta_inputs, indexing="ij")
     tabulated = np.array(
         [
-            [1.11803398874989, 0.677955875722298, 0.556669017350856, 0.526555870712214],
             [
-                0.249946637043496,
-                0.142404423806474,
-                0.0849110052758579,
-                0.0620683297049437,
+                1.118033988749895,
+                0.6779558757222977,
+                0.5566690173508563,
+                0.5265558707122137,
             ],
             [
-                0.175156766222677,
-                0.100380421194052,
-                0.0589275370701230,
-                0.0419103269101120,
+                0.2499466370434959,
+                0.1424044238064738,
+                0.0849110052758587,
+                0.06206832970494668,
+            ],
+            [
+                0.1751567662226774,
+                0.1003804211940519,
+                0.05892753707014577,
+                0.0419103269101814,
             ],
         ]
     )
