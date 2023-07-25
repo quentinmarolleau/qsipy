@@ -51,7 +51,7 @@ def ev_vhd_perfect_qe(
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
+    N : float | npt.NDArray[np.float_]
         Total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
@@ -75,7 +75,7 @@ def ev_vhd_squared_perfect_qe(
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
+    N : float | npt.NDArray[np.float_]
         Total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
@@ -94,7 +94,7 @@ def ev_vhd_squared_perfect_qe(
 
 def fluctuations_vhd_perfect_qe(
     phi: float | npt.NDArray[np.float_],
-    N: int | npt.NDArray[np.int_],
+    N: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
     """Returns the quantum fluctuations of the variance of the half difference of number
     of particles detected at both output ports of the interferometer.
@@ -104,7 +104,7 @@ def fluctuations_vhd_perfect_qe(
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
+    N : float | npt.NDArray[np.float_]
         Total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
@@ -132,7 +132,7 @@ def phase_uncertainty_vhd_perfect_qe(
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : int | npt.NDArray[np.int_]
+    N : float | npt.NDArray[np.float_]
         Total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
@@ -152,13 +152,13 @@ def phase_uncertainty_vhd_perfect_qe(
 # ||- general shape
 
 
-def ev_variance_difference_finite_qe(
+def ev_vhd_finite_qe(
     phi: float | npt.NDArray[np.float_],
     N: float | npt.NDArray[np.float_],
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the variance of the difference of number of
-    particles detected at both output arms of the interferometer.
+    """Returns the expectation value of the variance of the half difference of number of
+    particles detected at both output ports of the interferometer.
     The detectors have a finite quantum efficiency eta.
     Since the expectation value of the difference itself is zero, the variance is
     actually equal to the expectation value of the square of the difference.
@@ -167,16 +167,16 @@ def ev_variance_difference_finite_qe(
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
+    N : float | npt.NDArray[np.float_]
+        Total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
 
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <(N_output1 - N_output2) ** 2>
+        Expectation value: <(1/4) * (N_output1 - N_output2) ** 2>
     """
     return (
         eta**2 * np.sin(phi) ** 2 * (N / 2) * (1 + N / 2)
@@ -184,127 +184,75 @@ def ev_variance_difference_finite_qe(
     )
 
 
-def ev_difference_quarted_finite_qe(
+def ev_vhd_squared_finite_qe(
     phi: float | npt.NDArray[np.float_],
     N: float | npt.NDArray[np.float_],
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the power four of the difference of number of
-    particles detected at both output arms of the interferometer.
+    """Returns the expectation value of the power four of the half difference of number
+    of particles detected at both output ports of the interferometer.
     The detectors have a finite quantum efficiency eta.
 
     Parameters
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
+    N : float | npt.NDArray[np.float_]
+        Total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
 
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <(N_output1 - N_output2) ** 4>
+        Expectation value: <(1/16) * (N_output1 - N_output2) ** 4>
     """
-    nu = N / 2
-    return (eta * nu / 8) * (
-        1
-        + 3 * eta
-        + 16 * eta * nu
-        + 12 * eta**2 * nu
-        + 3 * eta**3 * nu
-        + 36 * eta**2 * nu**2
-        + 18 * eta**3 * nu**2
-        + 27 * eta**3 * nu**3
+    return (eta * N / 128) * (
+        8
+        + 24 * eta
+        + 64 * eta * N
+        + 48 * eta**2 * N
+        + 72 * eta**2 * N**2
+        + 12 * eta**3 * N
+        + 36 * eta**3 * N**2
+        + 27 * eta**3 * N**3
         - 4
         * eta
-        * (1 + nu)
-        * (1 + 9 * eta * nu + 9 * eta**2 * nu**2)
+        * (2 + N)
+        * (4 + 18 * eta * N + 9 * eta**2 * N**2)
         * np.cos(2 * phi)
-        + 9 * eta**3 * nu * (1 + nu) ** 2 * np.cos(4 * phi)
+        + 9 * eta**3 * N * (2 + N) ** 2 * np.cos(4 * phi)
     )
 
 
-def ev_fourth_moment_difference_finite_qe(
+def fluctuations_vhd_finite_qe(
     phi: float | npt.NDArray[np.float_],
     N: float | npt.NDArray[np.float_],
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the expectation value of the variance of the variance (4th moment) of
-    the difference of number of particles detected at both output arms of the
-    interferometer.
+    """Returns the quantum fluctuations of the variance of the half difference of number
+    of particles detected at both output ports of the interferometer.
     The detectors have a finite quantum efficiency eta.
-    This function is equal to:
-
-    (ev_difference_quarted_finite_qe - ev_difference_squared_finite_qe ** 2)
-
-    It corresponds to the square of the noise on the variance of the difference of
-    number of particles detected.
 
     Parameters
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
+    N : float | npt.NDArray[np.float_]
+        Total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
 
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Expectation value: <Var(Var(N_output1 - N_output2))>
+        Expectation value: <Sqrt[Var( Var{ (1/2) * (N_output1 - N_output2) } )]>
     """
-    nu = N / 2
-    return (eta * nu / 8) * (
-        1
-        + 3 * eta
-        + 14 * eta * nu
-        + 12 * eta**2 * nu
-        + 2 * eta**3 * nu
-        + 32 * eta**2 * nu**2
-        + 16 * eta**3 * nu**2
-        + 24 * eta**3 * nu**3
-        - 4
-        * eta
-        * (1 + nu)
-        * (1 + 8 * eta * nu + 8 * eta**2 * nu**2)
-        * np.cos(2 * phi)
-        + 8 * eta**3 * nu * (1 + nu) ** 2 * np.cos(4 * phi)
+    return np.sqrt(
+        ev_vhd_squared_finite_qe(phi, N, eta) - ev_vhd_finite_qe(phi, N, eta) ** 2
     )
-
-
-def noise_difference_finite_qe(
-    phi: float | npt.NDArray[np.float_],
-    N: float | npt.NDArray[np.float_],
-    eta: float | npt.NDArray[np.float_],
-) -> float | npt.NDArray[np.float_]:
-    """Returns the noise on the variance of the difference of number of particles
-    detected at both output arms of the interferometer.
-    The detectors have a finite quantum efficiency eta.
-    This function is equal to:
-
-    sqrt(ev_fourth_moment_difference_finite_qe)
-
-    Parameters
-    ----------
-    phi : float | npt.NDArray[np.float_]
-        Phase difference between both arms of the interferometer.
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
-
-    Returns
-    -------
-    float | npt.NDArray[np.float_]
-        RMS noise on the variance of the difference of number of particles detected.
-    """
-    return np.sqrt(ev_fourth_moment_difference_finite_qe(phi, N, eta))
 
 
 def phase_resolution_difference_finite_qe(
