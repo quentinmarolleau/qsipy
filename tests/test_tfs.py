@@ -605,7 +605,7 @@ def test_optimal_phi_vhd(RELATIVE_DIFF=1e-14):
     assert check.all()
 
 
-def test_resolution_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
+def test_phase_uncertainty_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
     # perfect case
     N_inputs = np.array([2, 10, 20, 50, 100])
     tabulated = np.array(
@@ -619,7 +619,7 @@ def test_resolution_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
     )
     check = (
         relative_deviation(
-            array_tested=tfs.resolution_at_optimal_phi_vhd(N_inputs),
+            array_tested=tfs.phase_uncertainty_at_optimal_phi_vhd(N_inputs),
             array_tabulated=tabulated,
         )
         < RELATIVE_DIFF
@@ -656,8 +656,28 @@ def test_resolution_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
 
     check = (
         relative_deviation(
-            array_tested=tfs.resolution_at_optimal_phi_vhd(N, eta),
+            array_tested=tfs.phase_uncertainty_at_optimal_phi_vhd(N, eta),
             array_tabulated=tabulated,
+        )
+        < RELATIVE_DIFF
+    )
+    assert check.all()
+
+
+def test_asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
+    RELATIVE_DIFF=1e-3,
+):
+    eta = 0.95
+    N = 10 ** np.linspace(4, 6, 10)
+    values = tfs.phase_uncertainty_at_optimal_phi_vhd(N, eta) * np.sqrt(N * eta)
+    limit = tfs.asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(eta)
+    print(values)
+    print("")
+    print(limit)
+    check = (
+        relative_deviation(
+            array_tested=values,
+            array_tabulated=np.full_like(values, limit),
         )
         < RELATIVE_DIFF
     )

@@ -512,7 +512,7 @@ def optimal_phi_vhd(
     )
 
 
-def resolution_at_optimal_phi_vhd(
+def phase_uncertainty_at_optimal_phi_vhd(
     N: int | npt.NDArray[np.int_],
     eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
@@ -666,13 +666,13 @@ def resolution_at_optimal_phi_vhd(
     )
 
 
-def asymptotic_limit_resolution_at_optimal_phi_difference(
+def asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
     """Returns the asymptotic limit (as the number of particles goes to infinity) of the ratio between:
-        - the resolution at the optimal phase and considering the variance of the difference of
-          particles at the output as the observable of interest
-        - the SQL 1/sqrt(eta x N).
+        - the phase uncertainty at the optimal phase and considering the variance of the half difference
+        of particles at the output as the observable of interest
+        - the SQL 1/sqrt(eta N).
 
     It only depends on the quantum efficiency of the detectors.
 
