@@ -18,8 +18,8 @@ abbreviations:
 
 general notations:
 ------------------
-    - N: the total number of particles in the interferometer. It corresponds to the
-        main experimental resource.
+    - N: the average  total number of particles in the interferometer. It corresponds to
+    the main experimental resource.
     - phi: the phase difference between both arms of the interferometer
     - eta: quantum efficiency of the detectors (between 0 and 1). More generally it may
         characterize any loss process occurring after the last beam splitter of the
@@ -52,7 +52,7 @@ def ev_vhd_perfect_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
     Returns
@@ -76,7 +76,7 @@ def ev_vhd_squared_perfect_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
     Returns
@@ -105,7 +105,7 @@ def fluctuations_vhd_perfect_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
     Returns
@@ -121,7 +121,7 @@ def phase_uncertainty_vhd_perfect_qe(
     N: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
     """Returns the phase uncertainty during an interferometry experiment using
-        - two-mode squeezed vacuum state with N/2 particles per mode on average;
+        - two-mode squeezed vacuum states at the input;
         - perfect detectors (quantum efficiency equal to 1);
         - considering the variance of the half difference of particles detected at the
             output as the observable of interest;
@@ -133,7 +133,7 @@ def phase_uncertainty_vhd_perfect_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
 
     Returns
@@ -168,7 +168,7 @@ def ev_vhd_finite_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
@@ -198,7 +198,7 @@ def ev_vhd_squared_finite_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
@@ -240,7 +240,7 @@ def fluctuations_vhd_finite_qe(
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
     N : float | npt.NDArray[np.float_]
-        Total number of particles. The input state being the two-mode squeezed vacuum
+        Average total number of particles. The input state being the two-mode squeezed vacuum
         state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
         Quantum efficiency of the detector, must be between 0 and 1.
@@ -255,124 +255,281 @@ def fluctuations_vhd_finite_qe(
     )
 
 
-def phase_resolution_difference_finite_qe(
+def phase_uncertainty_vhd_finite_qe(
     phi: float | npt.NDArray[np.float_],
     N: float | npt.NDArray[np.float_],
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
-    """Returns the resolution of the phase estimation during an interferometry
-    experiment using two-mode squeezed states, detectors with finite quantum efficiency
-    eta and considering the variance of the difference of particles at the output as the
-    observable of interest.
-    Notice that this resolution depends on the phase difference phi.
+    """Returns the phase uncertainty during an interferometry experiment using
+        - two-mode squeezed vacuum states at the input;
+        - detectors with finite quantum efficiency eta;
+        - considering the variance of the half difference of particles detected at the
+            output as the observable of interest;
+
+    Notice that this resolution depends on the phase difference phi. Here (eta < 1),
+    meaning that when (phi = 0), the phase uncertainty goes to infinity.
 
     Parameters
     ----------
     phi : float | npt.NDArray[np.float_]
         Phase difference between both arms of the interferometer.
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
     eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+        Quantum efficiency of the detector, must be strictly between 0 and 1.
 
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Phase resolution.
+        Phase uncertainty.
     """
-    nu = N / 2
-    p0 = (
-        1
-        + 3 * eta
-        + 14 * eta * nu
-        + 12 * eta**2 * nu
-        + 2 * eta**3 * nu
-        + 32 * eta**2 * nu**2
-        + 16 * eta**3 * nu**2
-        + 24 * eta**3 * nu**3
+    return np.divide(
+        np.sqrt(
+            N
+            * eta
+            * (
+                1
+                + 3 * eta
+                + 7 * N * eta
+                + 6 * N * eta**2
+                + 8 * N**2 * eta**2
+                + N * eta**3
+                + 4 * N**2 * eta**3
+                + 3 * N**3 * eta**3
+                - 2
+                * (N + 2)
+                * eta
+                * (1 + 4 * N * eta + 2 * N**2 * eta**2)
+                * np.cos(2 * phi)
+                + N * (N + 2) ** 2 * eta**3 * np.cos(4 * phi)
+            )
+        ),
+        N * (N + 2) * eta**2 * np.abs(np.sin(2 * phi)),
+        # we initialize the output with np.inf, and replace with the proper values where
+        # phi!=0. There may be a cleaner way than doing "phi + N + eta" to initialize
+        # an array with the correct shape, but the issue is that phi, N, eta can either
+        # be scalars, or same-shape arrays....
+        out=np.full_like(phi + N + eta, np.inf, dtype=np.float64),
+        where=(phi != 0),
     )
 
-    p1 = -4 * eta * (1 + nu) * (1 + 8 * eta * nu + 8 * eta**2 * nu**2)
 
-    p2 = 8 * eta**3 * nu * (1 + nu) ** 2
+# ||- agnostic functions
 
-    return np.sqrt(eta * nu * (p0 + p1 * np.cos(2 * phi) + p2 * np.cos(4 * phi))) / (
-        2 * np.sqrt(2) * eta**2 * nu * (1 + nu) * np.sin(2 * phi)
+
+def ev_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the expectation value of the variance of the half difference of number of
+    particles detected at both output ports of the interferometer.
+    Since the expectation value of the difference itself is zero, the variance is
+    actually equal to the expectation value of the square of the difference.
+
+    This function only calls either "ev_vhd_perfect_qe" or "ev_vhd_finite_qe", depending
+    on the value of eta that it is set as argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <(1/4) * (N_output1 - N_output2) ** 2>
+    """
+    return np.where(
+        eta == 1,
+        ev_vhd_perfect_qe(phi, N),
+        ev_vhd_finite_qe(phi, N, eta),
+    )
+
+
+def ev_vhd_squared(
+    phi: float | npt.NDArray[np.float_],
+    N: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the expectation value of the power four of the half difference of number
+    of particles detected at both output ports of the interferometer.
+
+    This function only calls either "ev_vhd_squared_perfect_qe" or
+    "ev_vhd_squared_finite_qe", depending on the value of eta that it is set as
+    argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <(1/16) * (N_output1 - N_output2) ** 4>
+    """
+    return np.where(
+        eta == 1,
+        ev_vhd_squared_perfect_qe(phi, N),
+        ev_vhd_squared_finite_qe(phi, N, eta),
+    )
+
+
+def fluctuations_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the quantum fluctuations of the variance of the half difference of number
+    of particles detected at both output ports of the interferometer.
+
+    This function only calls either "fluctuations_vhd_perfect_qe" or
+    "fluctuations_vhd_finite_qe", depending on the value of eta that it is set as
+    argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Expectation value: <Sqrt[Var( Var{ (1/2) * (N_output1 - N_output2) } )]>
+    """
+    return np.where(
+        eta == 1,
+        fluctuations_vhd_perfect_qe(phi, N),
+        fluctuations_vhd_finite_qe(phi, N, eta),
+    )
+
+
+def phase_uncertainty_vhd(
+    phi: float | npt.NDArray[np.float_],
+    N: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
+) -> float | npt.NDArray[np.float_]:
+    """Returns the phase uncertainty during an interferometry experiment using
+        - two-mode squeezed vacuum states at the input;
+        - considering the variance of the half difference of particles detected at the
+            output as the observable of interest;
+
+    This function only calls either "phase_uncertainty_vhd_perfect_qe" or
+    "phase_uncertainty_vhd_finite_qe", depending on the value of eta that it is set as
+    argument.
+
+    Parameters
+    ----------
+    phi : float | npt.NDArray[np.float_]
+        Phase difference between both arms of the interferometer.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
+
+    Returns
+    -------
+    float | npt.NDArray[np.float_]
+        Phase uncertainty.
+    """
+    return np.where(
+        eta == 1,
+        phase_uncertainty_vhd_perfect_qe(phi, N),
+        phase_uncertainty_vhd_finite_qe(phi, N, eta),
     )
 
 
 # ||- behaviour at the optimal phase
 
 
-def optimal_phi_difference(
+def optimal_phi_vhd(
     N: float | npt.NDArray[np.float_],
-    eta: float | npt.NDArray[np.float_],
+    eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
     """Returns the optimal phase to estimate (minimizing the resolution) during an
-    interferometry experiment using two-mode squeezed states, detectors with finite
-    quantum efficiency and considering the variance of the difference of particles at
-    the output as the observable of interest. The detectors have a finite quantum
-    efficiency eta.
+    interferometry experiment using twin-Fock states, detectors with finite quantum
+    efficiency and considering the variance of the difference of particles at the
+    output as the observable of interest. The detectors have a finite quantum efficiency
+    eta.
 
     Parameters
     ----------
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
 
     Returns
     -------
     float | npt.NDArray[np.float_]
         Optimal phase to estimate experimentally.
     """
-    nu = N / 2
-    return arccsc(
-        np.sqrt(
-            1
-            / ((-1 + eta) * (-1 - 10 * eta * nu + 10 * eta**2 * nu))
-            * (
-                1
-                - 20 * eta**2 * nu
-                + 10 * eta**3 * nu
-                + eta * (-1 + 10 * nu)
-                + np.sqrt(
-                    (-1 + eta)
-                    * (
-                        -1
-                        - 7 * eta * (1 + 4 * nu)
-                        - 4 * eta**2 * nu * (26 + 61 * nu)
-                        + 20 * eta**5 * nu**2 * (5 + 32 * nu + 32 * nu**2)
-                        - 4 * eta**3 * nu * (-15 + 81 * nu + 176 * nu**2)
-                        + eta**4 * (340 * nu**2 - 640 * nu**4)
+    return np.where(
+        eta == 1,
+        0,
+        arccsc(
+            np.sqrt(
+                (1 / ((eta - 1) * (-1 + 5 * eta * N * (eta - 1))))
+                * (
+                    1
+                    + (-1 + 5 * N) * eta
+                    - 10 * N * eta**2
+                    + 5 * N * eta**3
+                    + np.sqrt(
+                        (eta - 1)
+                        * (
+                            -1
+                            - 7 * (1 + 2 * N) * eta
+                            - N * (52 + 61 * N) * eta**2
+                            + N * (30 - 81 * N - 88 * N**2) * eta**3
+                            + (85 * N**2 - 40 * N**4) * eta**4
+                            + 5 * N**2 * (5 + 16 * N + 8 * N**2) * eta**5
+                        )
                     )
                 )
             )
-        )
+        ),
     )
 
 
-def resolution_at_optimal_phi_difference(
+def phase_uncertainty_at_optimal_phi_vhd(
     N: float | npt.NDArray[np.float_],
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
     """Returns the resolution at the optimal phase to estimate during an interferometry
-    experiment using two-mode squeezed states, detectors with finite quantum efficiency
-    eta and considering the variance of the difference of particles at the output as the
+    experiment using twin-Fock states, detectors with finite quantum efficiency eta and
+    considering the variance of the difference of particles at the output as the
     observable of interest.
     This function is therefore just:
 
-    phase_resolution_difference_finite_qe(optimal_phi_difference(nu, eta), nu, eta)
+    phase_resolution_difference_finite_qe(optimal_phi_difference(n, eta), n, eta)
 
     Parameters
     ----------
-    N : float | npt.NDArray[np.float]
-        Average total number of particles (twice the average number of particles per
-        input mode).
-    eta : float | npt.NDArray[np.float_]
-        Quantum efficiency of the detector, must be between 0 and 1.
+    N : float | npt.NDArray[np.float_]
+        Average total number of particles. The input state being the two-mode squeezed vacuum
+        state with N/2 particles per mode on average.
+    eta : float | npt.NDArray[np.float_], optional
+        Quantum efficiency of the detector, must be between 0 and 1, by default 1.
 
     Returns
     -------
@@ -510,13 +667,13 @@ def resolution_at_optimal_phi_difference(
     )
 
 
-def asymptotic_limit_resolution_at_optimal_phi_difference(
+def asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
     eta: float | npt.NDArray[np.float_],
 ) -> float | npt.NDArray[np.float_]:
     """Returns the asymptotic limit (as the number of particles goes to infinity) of the ratio between:
-        - the resolution at the optimal phase and considering the variance of the difference of
-          particles at the output as the observable of interest
-        - the SQL 1/sqrt(eta x N).
+        - the phase uncertainty at the optimal phase and considering the variance of the half difference
+        of particles at the output as the observable of interest
+        - the SQL 1/sqrt(eta N).
 
     It only depends on the quantum efficiency of the detectors.
 
@@ -528,6 +685,6 @@ def asymptotic_limit_resolution_at_optimal_phi_difference(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Optimal resolution to SQL ratio in the asymptotic limit of n.
+        Optimal phase uncertainty to SQL ratio in the asymptotic limit of N.
     """
     return ((2 / 5) ** (1 / 4) * np.sqrt(5 + 2 * np.sqrt(10))) * np.sqrt(1 - eta)
