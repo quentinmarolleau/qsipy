@@ -1,5 +1,5 @@
 """tfs.py
-Provides analytical functions related to the phase resolution during an interferometry
+Provides analytical functions related to the phase uncertainty during an interferometry
 experiment using twin-Fock states (i.e. |n,n>) as an input state.
 The interferometer considered is a generic Mach-Zehnder with a phase difference ϕ
 between both arms.
