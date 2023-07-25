@@ -664,21 +664,50 @@ def test_phase_uncertainty_at_optimal_phi_vhd(RELATIVE_DIFF=1e-12):
     assert check.all()
 
 
-def test_asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
-    RELATIVE_DIFF=1e-3,
-):
+def test_asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd():
+    N = 10 ** np.linspace(1, 5, 10)
+
+    # test 1
     eta = 0.95
-    N = 10 ** np.linspace(4, 6, 10)
     values = tfs.phase_uncertainty_at_optimal_phi_vhd(N, eta) * np.sqrt(N * eta)
     limit = tfs.asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(eta)
-    print(values)
-    print("")
-    print(limit)
-    check = (
-        relative_deviation(
-            array_tested=values,
-            array_tabulated=np.full_like(values, limit),
-        )
-        < RELATIVE_DIFF
-    )
+
+    # difference between limit and computed values
+    square_diff = (values - np.full_like(values, limit)) ** 2
+    # checking that the difference gets smaller when N increases (study the derivate)
+    derivative_square_diff = np.diff(square_diff)
+    check = derivative_square_diff < 0
     assert check.all()
+    # checking the the computed values reach get arbitrarily close to the limit
+    val = tfs.phase_uncertainty_at_optimal_phi_vhd(1e5, eta)
+    assert (val * np.sqrt(1e5 * eta) - limit) ** 2 < 1e-9
+
+    # test 2
+    eta = 0.75
+    values = tfs.phase_uncertainty_at_optimal_phi_vhd(N, eta) * np.sqrt(N * eta)
+    limit = tfs.asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(eta)
+
+    # difference between limit and computed values
+    square_diff = (values - np.full_like(values, limit)) ** 2
+    # checking that the difference gets smaller when N increases (study the derivate)
+    derivative_square_diff = np.diff(square_diff)
+    check = derivative_square_diff < 0
+    assert check.all()
+    # checking the the computed values reach get arbitrarily close to the limit
+    val = tfs.phase_uncertainty_at_optimal_phi_vhd(1e5, eta)
+    assert (val * np.sqrt(1e5 * eta) - limit) ** 2 < 1e-9
+
+    # test 3
+    eta = 0.5
+    values = tfs.phase_uncertainty_at_optimal_phi_vhd(N, eta) * np.sqrt(N * eta)
+    limit = tfs.asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(eta)
+
+    # difference between limit and computed values
+    square_diff = (values - np.full_like(values, limit)) ** 2
+    # checking that the difference gets smaller when N increases (study the derivate)
+    derivative_square_diff = np.diff(square_diff)
+    check = derivative_square_diff < 0
+    assert check.all()
+    # checking the the computed values reach get arbitrarily close to the limit
+    val = tfs.phase_uncertainty_at_optimal_phi_vhd(1e5, eta)
+    assert (val * np.sqrt(1e5 * eta) - limit) ** 2 < 1e-9
