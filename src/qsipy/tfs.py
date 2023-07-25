@@ -282,33 +282,29 @@ def phase_uncertainty_vhd_finite_qe(
             N
             * eta
             * (
-                (
-                    64
-                    - 320 * eta
-                    + 192 * N * eta
-                    + 384 * eta**2
-                    - 320 * N * eta**2
-                    + 64 * N**2 * eta**2
-                    - 144 * eta**3
-                    + 132 * N * eta**3
-                    - 52 * N**2 * eta**3
-                    + 3 * N**3 * eta**3
-                )
-                + (
-                    -4
-                    * (N + 2)
-                    * eta
-                    * (16 + 16 * (-3 + N) * eta + (24 - 14 * N + N**2) * eta**2)
-                )
+                64
+                - 320 * eta
+                + 192 * N * eta
+                + 384 * eta**2
+                - 320 * N * eta**2
+                + 64 * N**2 * eta**2
+                - 144 * eta**3
+                + 132 * N * eta**3
+                - 52 * N**2 * eta**3
+                + 3 * N**3 * eta**3
+                - 4
+                * (N + 2)
+                * eta
+                * (16 + 16 * (-3 + N) * eta + (24 - 14 * N + N**2) * eta**2)
                 * np.cos(2 * phi)
                 + (-48 - 20 * N + 4 * N**2 + N**3) * eta**3 * np.cos(4 * phi)
             )
         ),
-        8 * N * (N + 2) * eta**2 * np.abs(np.sin(phi) * np.cos(phi)),
+        4 * N * (N + 2) * eta**2 * np.abs(np.sin(2 * phi)),
         # we initialize the output with np.inf, and replace with the proper values where
         # phi!=0. There may be a cleaner way than doing "phi + N + eta" to initialize
         # an array with the correct shape, but the issue is that phi, N, eta can either
-        # be scalars, or same shape arrays....
+        # be scalars, or same-shape arrays....
         out=np.full_like(phi + N + eta, np.inf, dtype=np.float64),
         where=(phi != 0),
     )
@@ -684,6 +680,6 @@ def asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
     Returns
     -------
     float | npt.NDArray[np.float_]
-        Optimal resolution to SQL ratio in the asymptotic limit of n.
+        Optimal phase uncertainty to SQL ratio in the asymptotic limit of N.
     """
     return np.sqrt(3) * np.sqrt(1 - eta)
