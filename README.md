@@ -21,7 +21,17 @@ The scheme of the experiment that we aer considering is represented with the fig
 
 * detailed explanation about the derivation of the formulae are given in the [supplemental material](link) of the article ;
 
-[^1]: indeed, $`\langle\hat{N}_{c_2}-\hat{N}_{c_1}\rangle=0`$ and therefore $`\mathrm{Var}\left[ \hat{N}_{c_2}-\hat{N}_{c_1} \right]=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle-\left\langle\hat{N}_{c_2}-\hat{N}_{c_1}\right\rangle^2=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle`$
+[^1]: indeed, 
+    
+    $$
+    \langle\hat{N}_{c_2}-\hat{N}_{c_1}\rangle=0
+    $$ 
+    
+    and therefore 
+    
+    $$
+    \mathrm{Var}\left[ \hat{N}_{c_2}-\hat{N}_{c_1} \right]=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle-\left\langle\hat{N}_{c_2}-\hat{N}_{c_1}\right\rangle^2=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle
+    $$
 
 ---
 
