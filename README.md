@@ -15,7 +15,7 @@ The scheme of the experiment that we aer considering is represented with the fig
 * experimentalists are interested in the measurement of the phase difference $\phi$ between the two arms ;
 * the observable $\hat{O}$ that one use to perform a measurement is the **square** of the *half difference* of particles detected at both output ports $\hat{c}_1$ and $\hat{c}_2$, whose expectation value is actually the **variance** of the *half difference* of particles detected[^1]:
 
-$$O = \frac{1}{4} \left( N_{c_2} - N_{c_1} \right)^2$$
+$$\hat{O} = \frac{1}{4} \left( N_{c_2} - N_{c_1} \right)^2$$
 
 * detailed explanation about the derivation of the formulae are given in the [supplemental material](link) of the article ;
 
