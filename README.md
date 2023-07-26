@@ -21,7 +21,7 @@ The scheme of the experiment that we aer considering is represented with the fig
 
 * detailed explanation about the derivation of the formulae are given in the [supplemental material](link) of the article ;
 
-(note): indeed, $ \hat{N}_{c_2} - \hat{N}_{c_1} = 0$.
+(note): indeed, $\hat{N}_{c_2} - \hat{N}_{c_1} = 0$.
 
 ---
 
