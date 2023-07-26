@@ -13,6 +13,7 @@ abbreviations:
     - ev: Expectation Value
     - vhd: Variance of the Half Difference of the number of particles at the output
         (i.e. our observable)
+    - qe: Quantum efficiency (i.e. the value of η)
 
 general notations:
 ------------------
@@ -456,10 +457,10 @@ def optimal_phi_vhd(
     eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
     """Returns the optimal phase to estimate (minimizing the resolution) during an
-    interferometry experiment using twin-Fock states, detectors with finite quantum
-    efficiency and considering the variance of the difference of particles at the
-    output as the observable of interest. The detectors have a finite quantum efficiency
-    eta.
+    interferometry experiment using a twin-Fock state, detectors with finite quantum
+    efficiency and considering the variance of the half difference of particles detected
+    at the output as the observable of interest. The detectors have a finite quantum
+    efficiency eta.
 
     Parameters
     ----------
@@ -513,12 +514,12 @@ def phase_uncertainty_at_optimal_phi_vhd(
     eta: float | npt.NDArray[np.float_] = 1,
 ) -> float | npt.NDArray[np.float_]:
     """Returns the resolution at the optimal phase to estimate during an interferometry
-    experiment using twin-Fock states, detectors with finite quantum efficiency eta and
-    considering the variance of the difference of particles at the output as the
-    observable of interest.
+    experiment using a twin-Fock state, detectors with finite quantum efficiency eta and
+    considering the variance of the half difference of particles detected at the output
+    as the observable of interest.
     This function is therefore just:
 
-    phase_resolution_difference_finite_qe(optimal_phi_difference(n, eta), n, eta)
+    phase_resolution_difference_finite_qe(optimal_phi_vhd(n, eta), n, eta)
 
     Parameters
     ----------
@@ -667,7 +668,7 @@ def asymptotic_ratio_phase_uncertainty_to_SQL_at_optimal_phi_vhd(
 ) -> float | npt.NDArray[np.float_]:
     """Returns the asymptotic limit (as the number of particles goes to infinity) of the ratio between:
         - the phase uncertainty at the optimal phase and considering the variance of the half difference
-        of particles at the output as the observable of interest
+        of particles detected at the output as the observable of interest
         - the SQL 1/sqrt(eta N).
 
     It only depends on the quantum efficiency of the detectors.
