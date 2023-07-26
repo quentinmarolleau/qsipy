@@ -23,6 +23,10 @@ N = 100
 phi = np.linspace(0, 0.2, 200)
 eta = 0.95
 
+
+# PART RELATED TO QSIPY FUNCTIONS
+# (the rest is only plotting and decoration)
+# --------------------------------------------------------------------------------------
 perfect_TF = np.sqrt(N) * tfs.phase_uncertainty_vhd(phi, N)
 perfect_TMS = np.sqrt(N) * tms.phase_uncertainty_vhd(phi, N)
 realistic_TF = np.sqrt(eta * N) * tfs.phase_uncertainty_vhd(phi, N, eta)
@@ -32,6 +36,7 @@ phi0_tf = tfs.optimal_phi_vhd(N, eta)
 res_phi0_tf = np.sqrt(eta * N) * tfs.phase_uncertainty_vhd(phi0_tf, N, eta)
 phi0_tms = tms.optimal_phi_vhd(N, eta)
 res_phi0_tms = np.sqrt(eta * N) * tms.phase_uncertainty_vhd(phi0_tms, N, eta)
+# --------------------------------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(width, height))
 
