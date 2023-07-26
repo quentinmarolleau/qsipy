@@ -23,15 +23,15 @@ The scheme of the experiment that we aer considering is represented with the fig
 
 [^1]: indeed, 
     
-    $$
+    ```math
     \langle\hat{N}_{c_2}-\hat{N}_{c_1}\rangle=0
-    $$ 
+    ```
     
     and therefore 
     
-    $$
+    ```math
     \mathrm{Var}\left[ \hat{N}_{c_2}-\hat{N}_{c_1} \right]=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle-\left\langle\hat{N}_{c_2}-\hat{N}_{c_1}\right\rangle^2=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle
-    $$
+    ```
 
 ---
 
