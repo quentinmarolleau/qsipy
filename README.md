@@ -14,7 +14,9 @@ The scheme of the experiment that we aer considering is represented with the fig
 * the detection suffers from a **non-unit quantum efficiency** $\eta$ ;
 * experimentalists are interested in the measurement of the phase difference $\phi$ between the two arms ;
 * the observable $\hat{O}$ that one use to perform a measurement is the **square** of the *half difference* of particles detected at both output ports $\hat{c}_1$ and $\hat{c}_2$, whose expectation value is actually the **variance** of the *half difference* of particles detected[^1]:
-    $$\hat{O} = \frac{1}{4} \left( \hat{N}_{c_2} - \hat{N}_{c_1} \right)^2$$
+
+$$\hat{O} = \frac{1}{4} \left( \hat{N}_{c_2} - \hat{N}_{c_1} \right)^2$$
+
 * detailed explanation about the derivation of the formulae are given in the [supplemental material](link) of the article ;
 
 [^1]: indeed, $\langle \hat{N}_{c_2} - \hat{N}_{c_1} \rangle = 0$, and therefore  $4 \times \mathrm{Var} \left[ \hat{O} \right] =  \left\langle \left(\hat{N}_{c_2} - \hat{N}_{c_1}\right)^2 \right\rangle - \left\langle \hat{N}_{c_2} - \hat{N}_{c_1} \right\rangle^2 = \left\langle \left(\hat{N}_{c_2} - \hat{N}_{c_1}\right)^2 \right\rangle$
