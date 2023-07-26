@@ -1,6 +1,6 @@
 [tool.poetry]
     name = "qsipy"
-    version = "0.1.0"
+    version = "0.1.1"
     description = "Quantum State Interferometry with PYthon."
     authors = ["Quentin Marolleau <quentin.marolleau@institutoptique.fr>"]
     license = "mit"
