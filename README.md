@@ -45,9 +45,9 @@ no compilation is needed. The functions of interest are defined in two separate 
 
 ## Examples
 
-**N.B.** the gain in decibels (relatively to the standard quantum limit) are defined as such:
+**N.B.** the gain in decibels (relatively to the standard quantum limit) is defined as such:
 
-$$ G = 20 \log \left[ \sqrt{\eta N} \, \Delta \phi \right]$$ 
+$$ G = 20 \log \left[ \sqrt{\eta N} \ \Delta \phi \right]$$ 
 
 #### 1. Phase uncertainty $\Delta \phi$ as a function of the measured phase difference
 
