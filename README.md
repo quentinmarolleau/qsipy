@@ -89,8 +89,8 @@ Currently the package is organized in two main modules `tfs` and `tms`, containi
 * `vhd` stands for *"variance of the half difference"*
 * `qe` stands for *"quantum efficiency"* (i.e. the value of $\eta$)
 
-Here is the listing of the useful functions that one can use, calling `tfs.`*myfunction*
-or `tfs.`*myfunction*:
+Here is the listing of the useful functions that one can use, calling `tfs."function"`
+or `tms."function"`:
 
 #### Most important functions
 
