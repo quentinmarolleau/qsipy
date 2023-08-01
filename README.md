@@ -2,8 +2,9 @@
 
 ## This package provides functions that return various physical quantities related to interferometry experiments using twin Fock states $|n,n\rangle$ or two-mode squeezed vacuum states
 
-### Functions contained in this package are derived in [this article](link)
+### Functions contained in this package are derived in [this article](https://arxiv.org/abs/2307.16479).
 * DOI: *paper published soon*
+* also available in [HAL](https://hal.science/hal-04172605)
 ---
 
 ## Quick context explanation
@@ -19,7 +20,7 @@ The scheme of the experiment that we aer considering is represented with the fig
 \hat{O} = \frac{1}{4} \left( \hat{N}_{c_2} - \hat{N}_{c_1} \right)^2
 ```
 
-* detailed explanation about the derivation of the formulae are given in the [supplemental material](link) of the article ;
+* detailed explanation about the derivation of the formulae are given in the [supplemental material](https://arxiv.org/abs/2307.16479) of the article ;
 
 $`{}^{[1]}`$: indeed, $`\langle\hat{N}_{c_2}-\hat{N}_{c_1}\rangle=0`$ and therefore $`\mathrm{Var}\left[ \hat{N}_{c_2}-\hat{N}_{c_1} \right]=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle-\left\langle\hat{N}_{c_2}-\hat{N}_{c_1}\right\rangle^2=\left\langle\left(\hat{N}_{c_2}-\hat{N}_{c_1}\right)^2\right\rangle`$
 
