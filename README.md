@@ -2,9 +2,10 @@
 
 ## This package provides functions that return various physical quantities related to interferometry experiments using twin Fock states $|n,n\rangle$ or two-mode squeezed vacuum states
 
-### Functions contained in this package are derived in [this article](https://arxiv.org/abs/2307.16479).
-* DOI: *paper published soon*
+### Functions contained in this package are derived in [this article](https://journals.aps.org/pra/abstract/10.1103/PhysRevA.109.023701).
+* DOI: [10.1103/PhysRevA.109.023701](https://journals.aps.org/pra/abstract/10.1103/PhysRevA.109.023701)
 * also available in [HAL](https://hal.science/hal-04172605)
+* and pre-print in [arXiv](https://arxiv.org/abs/2307.16479)
 ---
 
 ## Quick context explanation
