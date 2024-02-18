@@ -1,6 +1,6 @@
 # Python package about interferometry using two-mode quantum states
 
-[![DOI](https://img.shields.io/badge/DOI-10.1063%2F1.4817213-0F79D0.svg)](https://doi.org/10.1103/PhysRevA.109.023701)
+[![DOI](https://img.shields.io/badge/DOI-10.1103%2FPhysRevA.109.023701-blue)](https://doi.org/10.1103/PhysRevA.109.023701)
 
 ## This package provides functions that return various physical quantities related to interferometry experiments using twin Fock states $|n,n\rangle$ or two-mode squeezed vacuum states
 
